@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Печеливши участници от тегленето!</title>
+<style>
+   * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+    }
+    
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    
+    /* Header ve Geri Sayım */
+    .header {
+        background: rgba(255,255,255,0.95);
+        border-radius: 20px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        backdrop-filter: blur(10px);
+        text-align: center;
+    }
+    
+    h1 {
+        text-align: center;
+        color: #333;
+        font-size: 2.2em;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    h1 span {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 50px;
+        font-size: 0.5em;
+        vertical-align: middle;
+        margin-left: 10px;
+    }
+    
+    /* Geri Sayım Kutusu */
+    .countdown-box {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .countdown-box h3 {
+        color: #666;
+        font-size: 18px;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+    
+    .countdown-display {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+    
+    .countdown-item {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 15px;
+        border-radius: 10px;
+        min-width: 100px;
+    }
+    
+    .countdown-item .number {
+        font-size: 36px;
+        font-weight: bold;
+        font-family: 'Courier New', monospace;
+    }
+    
+    .countdown-item .label {
+        font-size: 14px;
+        opacity: 0.9;
+        margin-top: 5px;
+    }
+    
+    .countdown-message {
+        font-size: 24px;
+        font-weight: bold;
+        color: #4CAF50;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    
+    /* Kazananlar Bölümü */
+    .winners-section {
+        background: rgba(255,255,255,0.95);
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    
+    .winners-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin-top: 20px;
+    }
+    
+    .winner-column {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .winner-column .header {
+        margin: 0;
+        border-radius: 0;
+        padding: 20px;
+        text-align: center;
+        color: white;
+    }
+    
+    .winner-column.facebook .header {
+        background: linear-gradient(135deg, #4267B2 0%, #5981c7 100%);
+    }
+    
+    .winner-column.instagram .header {
+        background: linear-gradient(135deg, #C13584 0%, #e1306c 100%);
+    }
+    
+    .header-icon {
+        font-size: 40px;
+        margin-bottom: 10px;
+    }
+    
+    .header h2 {
+        font-size: 24px;
+        margin-bottom: 5px;
+    }
+    
+    .header .seed {
+        font-size: 14px;
+        opacity: 0.9;
+        background: rgba(255,255,255,0.2);
+        padding: 5px 10px;
+        border-radius: 20px;
+        display: inline-block;
+        margin-top: 10px;
+        font-family: monospace;
+    }
+    
+    .header .date {
+        font-size: 12px;
+        opacity: 0.8;
+        margin-top: 5px;
+    }
+    
+    .winner-list {
+        padding: 20px;
+        background: #f8f9fa;
+        min-height: 300px;
+    }
+    
+    .winner-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px;
+        background: white;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        animation: slideIn 0.3s ease;
+        transition: all 0.3s ease;
+        border: 1px solid #eee;
+    }
+    
+    .winner-item:hover {
+        transform: translateX(5px);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        border-color: #667eea;
+    }
+    
+    .winner-medal {
+        font-size: 20px;
+        min-width: 20px;
+        text-align: center;
+    }
+    
+    .winner-info {
+        flex: 1;
+    }
+    
+    .winner-info strong {
+        display: block;
+        color: #333;
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+    
+    .winner-stats {
+        display: flex;
+        gap: 15px;
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 8px;
+    }
+    
+    .winner-stats span {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    
+    .winner-profile {
+        display: inline-block;
+        color: #667eea;
+        text-decoration: none;
+        font-size: 13px;
+        padding: 4px 12px;
+        background: #f0f0f0;
+        border-radius: 20px;
+        transition: all 0.2s ease;
+        margin-right: 8px;
+    }
+    
+    .winner-profile:hover {
+        background: #667eea;
+        color: white;
+    }
+    
+    .winner-code {
+        font-family: 'Courier New', monospace;
+        font-size: 12px;
+        color: #e91e63;
+        background: #fce4ec;
+        padding: 4px 8px;
+        border-radius: 4px;
+        cursor: pointer;
+        display: inline-block;
+        transition: all 0.2s ease;
+    }
+    
+    .winner-code:hover {
+        background: #e91e63;
+        color: white;
+    }
+    
+    .no-winners {
+        text-align: center;
+        padding: 50px 20px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        color: #666;
+    }
+    
+    .no-winners .icon {
+        font-size: 60px;
+        margin-bottom: 20px;
+        opacity: 0.5;
+    }
+    
+    .no-winners h3 {
+        font-size: 24px;
+        margin-bottom: 10px;
+        color: #333;
+    }
+    
+    /* Loading Spinner */
+    .loading {
+        text-align: center;
+        padding: 50px;
+    }
+    
+    .loading-spinner {
+        display: inline-block;
+        width: 50px;
+        height: 50px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #667eea;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 15px;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .loading p {
+        color: #666;
+        font-size: 16px;
+    }
+    
+    /* Son Güncelleme */
+    .update-time {
+        text-align: center;
+        margin-top: 20px;
+        color: rgba(255,255,255,0.8);
+        font-size: 14px;
+        background: rgba(0,0,0,0.2);
+        padding: 10px;
+        border-radius: 10px;
+    }
+    
+    /* Hata Mesajı */
+    .error-message {
+        text-align: center;
+        padding: 30px;
+        background: #ffebee;
+        border-radius: 10px;
+        color: #c62828;
+        margin: 20px 0;
+    }
+    
+    .error-message .icon {
+        font-size: 40px;
+        margin-bottom: 10px;
+    }
+    
+    .error-message .details {
+        font-size: 12px;
+        color: #b71c1c;
+        margin-top: 10px;
+        padding: 10px;
+        background: #ffcdd2;
+        border-radius: 5px;
+        font-family: monospace;
+    }
+    
+    /* JSON Bilgi Paneli */
+    .json-info {
+        background: #e3f2fd;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+        text-align: left;
+        font-size: 13px;
+        border: 1px solid #90caf9;
+    }
+    
+    .json-info h4 {
+        color: #1565c0;
+        margin-bottom: 10px;
+        font-size: 14px;
+    }
+    
+    .json-info ul {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .json-info li {
+        padding: 5px 0;
+        color: #0d47a1;
+        border-bottom: 1px dashed #bbdefb;
+    }
+    
+    .json-info li.success {
+        color: #2e7d32;
+    }
+    
+    .json-info li.error {
+        color: #c62828;
+    }
+    
+    /* Animasyonlar */
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .winners-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .countdown-display {
+            gap: 10px;
+        }
+        
+        .countdown-item {
+            min-width: 70px;
+            padding: 10px;
+        }
+        
+        .countdown-item .number {
+            font-size: 24px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Header ve Geri Sayım -->
+    <div class="header">
+        <h1>
+            🎁 Печеливши участници от тегленето!
+           <!--  <span></span>-->
+        </h1>
+        
+        <!-- Yarın 21:00 Geri Sayımı -->
+        <div class="countdown-box" id="tomorrowCountdown">
+            <h3>⏰ Оставащо време!</h3>
+            <div class="countdown-display" id="countdownDisplay">
+                <div class="countdown-item">
+                    <div class="number" id="days">00</div>
+                    <div class="label">Дни</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="number" id="hours">00</div>
+                    <div class="label">Час</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="number" id="minutes">00</div>
+                    <div class="label">Минути</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="number" id="seconds">00</div>
+                    <div class="label">Секунди</div>
+                </div>
+            </div>
+            <div class="countdown-message" id="countdownMessage" style="display: none;">
+                🎉 Време за теглене! 🎉
+            </div>
+        </div>
+    </div>
+    
+    <!-- Kazananlar Bölümü -->
+    <div class="winners-section" id="winnersSection">
+        <div class="loading" id="loading">
+            <div class="loading-spinner"></div>
+            <p>Kazananlar yükleniyor...</p>
+        </div>
+        
+        <div class="winners-grid" id="winnersGrid" style="display: none;"></div>
+        
+        <div class="no-winners" id="noWinners" style="display: none;">
+            <div class="icon">📭</div>
+            <h3>Все още няма теглене.</h3>
+            <p>Когато тегленето се направи от администраторския панел, победителите ще се появят тук.</p>
+        </div>
+    </div>
+    
+    <!-- Son Güncelleme Zamanı -->
+    <div class="update-time" id="updateTime">
+       <!-- Son güncelleme: --:--:---->
+    </div>
+</div>
+
+<script>
+// ===========================================
+// JSON VERİSİ - BURAYA current_draw.json İÇERİĞİNİ YAPIŞTIRIN
+// ===========================================
+const DRAW_DATA = [
+ {
+    "type": "facebook",
+    "winners": [
+      {
+        "name": "Zeyneb Adil",
+        "profile": "https://www.facebook.com/zeyneb.adil.1",
+        "tagged_comments": "2",
+        "verification_code": "CF54740A"
+      },
+      {
+        "name": "Semra Mehmed",
+        "profile": "https://www.facebook.com/semraa.mehmed",
+        "tagged_comments": "1",
+        "verification_code": "39CA74C7"
+      },
+      {
+        "name": "Galina Djambazova",
+        "profile": "https://www.facebook.com/galina.djambazova.1",
+        "tagged_comments": "1",
+        "verification_code": "584A26C9"
+      }
+    ],
+    "seed": "b2e87f35441724bf",
+    "date": "2026-02-26T15:16:32.697Z"
+  },
+  {
+    "type": "instagram",
+    "winners": [
+      {
+        "name": "islyamco",
+        "profile": "https://instagram.com/islyamco/",
+        "tagged_comments": "1",
+        "verification_code": "5CCEC2AF"
+      },
+      {
+        "name": "hatceilyaz_05",
+        "profile": "https://instagram.com/hatceilyaz_05/",
+        "tagged_comments": "2",
+        "verification_code": "9B7EC146"
+      },
+      {
+        "name": "zeyneb_s06",
+        "profile": "https://instagram.com/zeyneb_s06/",
+        "tagged_comments": "1",
+        "verification_code": "7B4472D8"
+      }
+    ],
+    "seed": "c3a15be59c87726a",
+    "date": "2026-02-26T15:17:15.748Z"
+  },
+  {
+    "type": "facebook",
+    "winners": [
+      {
+        "name": "Zeyneb Adil",
+        "profile": "https://www.facebook.com/zeyneb.adil.1",
+        "tagged_comments": "2",
+        "verification_code": "A705AB78"
+      },
+      {
+        "name": "Semra Mehmed",
+        "profile": "https://www.facebook.com/semraa.mehmed",
+        "tagged_comments": "1",
+        "verification_code": "B1A13BF3"
+      },
+      {
+        "name": "Osman Semiha",
+        "profile": "https://www.facebook.com/osman.nejdet.3",
+        "tagged_comments": "3",
+        "verification_code": "4AFFC1B2"
+      }
+    ],
+    "seed": "8b21e1455759ba10",
+    "date": "2026-02-26T16:21:27.370Z"
+  },
+  {
+    "type": "facebook",
+    "winners": [
+      {
+        "name": "Станислава Стоянова",
+        "profile": "https://www.facebook.com/sisinka.stoqnova",
+        "tagged_comments": "1",
+        "verification_code": "01AE6982"
+      },
+      {
+        "name": "Halime Yahya",
+        "profile": "https://www.facebook.com/halime.yahya",
+        "tagged_comments": "3",
+        "verification_code": "F243E176"
+      },
+      {
+        "name": "Пламена Лазарова",
+        "profile": "https://www.facebook.com/plamena.lazarova.9",
+        "tagged_comments": "1",
+        "verification_code": "43CDDA84"
+      }
+    ],
+    "seed": "1aa62e5b4a0e6ee3",
+    "date": "2026-02-26T17:00:59.967Z"
+  },
+  {
+    "type": "facebook",
+    "winners": [
+      {
+        "name": "Хатче Ю.",
+        "profile": "https://www.facebook.com/profile.php?id=100005143936318",
+        "tagged_comments": "1",
+        "verification_code": "0AB09FEC"
+      },
+      {
+        "name": "Halime Yahya",
+        "profile": "https://www.facebook.com/halime.yahya",
+        "tagged_comments": "3",
+        "verification_code": "4C540ADD"
+      },
+      {
+        "name": "Hatce Husein",
+        "profile": "https://www.facebook.com/hatce.huseyinn",
+        "tagged_comments": "3",
+        "verification_code": "885DF0F6"
+      }
+    ],
+    "seed": "8ec83c883c8efc5c",
+    "date": "2026-02-26T17:03:34.154Z"
+  },
+  {
+    "type": "facebook",
+    "winners": [
+      {
+        "name": "Selime Mustafa",
+        "profile": "https://www.facebook.com/selime.mustafa.31",
+        "tagged_comments": "2",
+        "verification_code": "6BDFBF18"
+      },
+      {
+        "name": "Fatme Kadir",
+        "profile": "https://www.facebook.com/fatme.ramadan.96",
+        "tagged_comments": "3",
+        "verification_code": "B0E347C0"
+      },
+      {
+        "name": "Nuray Ibrahim",
+        "profile": "https://www.facebook.com/nuray.ibrahim.566",
+        "tagged_comments": "1",
+        "verification_code": "0AC8F373"
+      }
+    ],
+    "seed": "3673c472c0e71c76",
+    "date": "2026-02-26T17:06:42.193Z"
+  },
+  {
+    "type": "facebook",
+    "winners": [
+      {
+        "name": "Hatce Husein",
+        "profile": "https://www.facebook.com/hatce.huseyinn",
+        "tagged_comments": "3",
+        "verification_code": "E60D56F5"
+      },
+      {
+        "name": "Силвия Терзиева",
+        "profile": "https://www.facebook.com/silvia.terzieva",
+        "tagged_comments": "1",
+        "verification_code": "656B1A8C"
+      },
+      {
+        "name": "Anife Selin",
+        "profile": "https://www.facebook.com/profile.php?id=100040644320629",
+        "tagged_comments": "3",
+        "verification_code": "B7426677"
+      }
+    ],
+    "seed": "42c09790ea82ab1f",
+    "date": "2026-02-26T17:08:00.260Z"
+  },
+  {
+    "type": "instagram",
+    "winners": [
+      {
+        "name": "niray.ahmed",
+        "profile": "https://instagram.com/niray.ahmed/",
+        "tagged_comments": "1",
+        "verification_code": "BCC0B229"
+      },
+      {
+        "name": "gusum.halil",
+        "profile": "https://instagram.com/gusum.halil/",
+        "tagged_comments": "1",
+        "verification_code": "39C1B0F5"
+      },
+      {
+        "name": "islyamco",
+        "profile": "https://instagram.com/islyamco/",
+        "tagged_comments": "1",
+        "verification_code": "F9A6B176"
+      }
+    ],
+    "seed": "b3f2924cc5ad0cfd",
+    "date": "2026-02-26T17:09:44.252Z"
+  },
+  {
+    "type": "instagram",
+    "winners": [
+      {
+        "name": "nurgyull._",
+        "profile": "https://instagram.com/nurgyull._/",
+        "tagged_comments": "1",
+        "verification_code": "477F4E0D"
+      },
+      {
+        "name": "hatceilyaz_05",
+        "profile": "https://instagram.com/hatceilyaz_05/",
+        "tagged_comments": "2",
+        "verification_code": "E46D9059"
+      },
+      {
+        "name": "hamideosmann",
+        "profile": "https://instagram.com/hamideosmann/",
+        "tagged_comments": "1",
+        "verification_code": "A44F127B"
+      }
+    ],
+    "seed": "930faa9d45815607",
+    "date": "2026-02-26T17:11:25.179Z"
+  }
+
+];
+// ===========================================
+
+// Kopyalama fonksiyonu
+function copyToClipboard(text) {
+    if (!text) return;
+    
+    navigator.clipboard.writeText(text).then(() => {
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed; top: 20px; right: 20px; background: #4CAF50; 
+            color: white; padding: 12px 24px; border-radius: 8px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 9999;
+            animation: slideIn 0.3s ease;
+        `;
+        notification.textContent = `✅ Kod kopyalandı: ${text}`;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => notification.remove(), 300);
+        }, 2000);
+    }).catch(err => {
+        console.error('Kopyalama hatası:', err);
+    });
+}
+
+// Animasyon stilleri
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+    }
+`;
+document.head.appendChild(style);
+
+// Verileri yükle (direkt DRAW_DATA'dan)
+function loadWinners() {
+    try {
+        // Yükleme spinner'ını gizle
+        document.getElementById('loading').style.display = 'none';
+        
+        // Veri var mı kontrol et
+        if (DRAW_DATA && DRAW_DATA.length > 0) {
+            // Son Facebook ve Instagram çekilişlerini bul
+            const facebookDraws = DRAW_DATA.filter(item => item.type === 'facebook');
+            const instagramDraws = DRAW_DATA.filter(item => item.type === 'instagram');
+            
+            const latestFacebook = facebookDraws.length > 0 ? facebookDraws[facebookDraws.length - 1] : null;
+            const latestInstagram = instagramDraws.length > 0 ? instagramDraws[instagramDraws.length - 1] : null;
+            
+            // Grid'i göster
+            document.getElementById('winnersGrid').style.display = 'grid';
+            document.getElementById('noWinners').style.display = 'none';
+            
+            // Grid'i güncelle
+            updateWinnersGrid(latestFacebook, latestInstagram);
+        } else {
+            // Hiç çekiliş yok
+            document.getElementById('winnersGrid').style.display = 'none';
+            document.getElementById('noWinners').style.display = 'block';
+        }
+        
+        // Son güncelleme zamanını göster
+        document.getElementById('updateTime').textContent = 
+            'Последна промяна: ' + new Date().toLocaleTimeString('tr-TR');
+            
+    } catch (error) {
+        console.error('Veri okuma hatası:', error);
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('winnersGrid').style.display = 'none';
+        document.getElementById('noWinners').style.display = 'block';
+        document.getElementById('noWinners').innerHTML = `
+            <div class="icon">⚠️</div>
+            <h3>Veri Yüklenemedi</h3>
+            <p>JSON verisi okunurken hata oluştu.</p>
+        `;
+    }
+}
+
+// Kazananları grid'de göster
+function updateWinnersGrid(facebook, instagram) {
+    const grid = document.getElementById('winnersGrid');
+    
+    let html = '';
+    
+    // Facebook sütunu
+    html += renderWinnerColumn('facebook', facebook);
+    
+    // Instagram sütunu
+    html += renderWinnerColumn('instagram', instagram);
+    
+    grid.innerHTML = html;
+}
+
+// Tek bir sütunu render et
+function renderWinnerColumn(type, data) {
+    const platformIcon = type === 'facebook' ? '📘' : '📷';
+    const platformName = type === 'facebook' ? 'Facebook' : 'Instagram';
+    const columnClass = type === 'facebook' ? 'facebook' : 'instagram';
+    
+    let columnHtml = `
+        <div class="winner-column ${columnClass}">
+            <div class="header">
+                <div class="header-icon">${platformIcon}</div>
+                <h2>${platformName} Печеливши</h2>
+    `;
+    
+    if (data && data.winners && data.winners.length > 0) {
+        columnHtml += `
+                <div class="seed">Seed: ${data.seed || '-'}</div>
+                <div class="date">${data.date ? new Date(data.date).toLocaleString('tr-TR') : ''}</div>
+            </div>
+            <div class="winner-list">
+        `;
+        
+        data.winners.forEach((winner, index) => {
+            const medal = index === 0 ? '🥇Микроблейдинг на вежди' : index === 1 ? '🥈Пигментация на устни' : '🥉Перманентна очна линия';
+            
+            columnHtml += `
+                <div class="winner-item">
+                    <div class="winner-medal">${medal}</div>
+                    <div class="winner-info">
+                        <strong>${winner.name || 'İsimsiz'}</strong>
+                        <div class="winner-stats">
+                            <span>📝 ${winner.tagged_comments || '0'} валидни коментара</span>
+                        </div>
+                        <div>
+                            <a href="${winner.profile || '#'}" target="_blank" class="winner-profile">
+                                👤 Вижте Профил
+                            </a>
+                            <code class="winner-code" onclick="copyToClipboard('${winner.verification_code || ''}')">
+                                ${winner.verification_code || '---'}
+                            </code>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        columnHtml += `</div>`;
+    } else {
+        columnHtml += `
+            </div>
+            <div class="winner-list">
+                <div style="text-align: center; padding: 40px 20px; color: #999;">
+                    <div style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;">${platformIcon}</div>
+                    <p>Henüz ${platformName} çekilişi yapılmamış</p>
+                </div>
+            </div>
+        `;
+    }
+    
+    columnHtml += `</div>`;
+    return columnHtml;
+}
+
+// Yarın 21:00 geri sayımı
+function updateTomorrowCountdown() {
+    const now = new Date();
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 0);
+    tomorrow.setHours(21, 0, 0, 0);
+    
+    const diff = tomorrow - now;
+    
+    if (diff <= 0) {
+        document.getElementById('countdownDisplay').style.display = 'none';
+        document.getElementById('countdownMessage').style.display = 'block';
+        return;
+    }
+    
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+    
+    document.getElementById('days').textContent = days.toString().padStart(2, '0');
+    document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+    document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+    document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+}
+
+// Sayfa yüklendiğinde
+document.addEventListener('DOMContentLoaded', function() {
+    loadWinners();
+    setInterval(loadWinners, 3000);
+    setInterval(updateTomorrowCountdown, 1000);
+    updateTomorrowCountdown();
+});
+</script>
+
+</body>
+</html>
